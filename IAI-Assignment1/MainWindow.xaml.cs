@@ -23,8 +23,7 @@ namespace IAI_Assignment1
         public MainWindow()
         {
             InitializeComponent();
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
         }
-
-
     }
 }
