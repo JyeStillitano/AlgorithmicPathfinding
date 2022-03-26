@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace IAI_Assignment1
 {
-    internal class Cell
+    public class Cell
     {
         // A Cell will have
         // Coordinates
@@ -43,66 +41,144 @@ namespace IAI_Assignment1
         int M;
 
         // List of cells as a 2D array
-        Cell[,] cells;
+        public Cell[,] cells;
+        List<Cell> goals = new List<Cell>();
+        private List<Cell> walls = new List<Cell>();
 
-        // Start Coordinate
+        // Frontier
+        Queue<State> frontier = new Queue<State>();
+        List<State> visitedStates = new List<State> ();
+
+        // Start
         int StartX;
         int StartY;
-
-        // One or more Goal Coordinates
-        List<Cell> goals = new List<Cell>();
-
-        List<Cell> walls = new List<Cell>();
-
+        public State StartState { get; }
         public Environment(string filepath)
         {
-            ProcessInput(filepath);
+            // If file successfully processed continue setup.
+            if (ProcessInput(filepath))
+            {
+                SetupCells();
+                SetupWalls();
+
+                StartState = new State(cells[StartX, StartY], null, 0);
+                frontier.Enqueue(StartState);
+                visitedStates.Add(StartState);
+            }
         }
 
-        void ProcessInput(string filepath) 
+        // Initialise all cells in 2D array.
+        private void SetupCells()
+        {
+            // M      N
+            // 0: 11, 1: 5
+            for (int i = 0; i < cells.GetLength(0); i++) 
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    cells[i, j] = new Cell(i, j);
+                }
+            }
+        }
+        
+        // Setup appropriate cells as walls.
+        private void SetupWalls()
+        {
+            foreach (Cell cell in walls) 
+            {
+                cells[cell.X, cell.Y].IsWall = true;
+            }
+        }
+
+        // Process input environment file.
+        private bool ProcessInput(string filepath) 
         {
             // Setup stream reader.
             StreamReader sr = new StreamReader(filepath);
-
-            if (sr != null)
+            try
             {
-                // Environment Size [N,M] | [Y,X]
-                string[] envSize = sr.ReadLine().Split(new char[] { '[', ',', ']' }, StringSplitOptions.RemoveEmptyEntries);
-                N = int.Parse(envSize[0]);
-                M = int.Parse(envSize[1]);
-                cells = new Cell[M, N]; // ORDER SHOULD UPHOLD X,Y ACCESS
-
-                // Agent State Coordinate (x,y)
-                string[] startCoord = sr.ReadLine().Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-                StartX = int.Parse(startCoord[0]);
-                StartY = int.Parse(startCoord[1]);
-
-                // Goal State Coordinates (x,y) | (x,y)
-                string[] goalStates = sr.ReadLine().Split('|');
-                foreach (string s in goalStates)
+                if (sr != null)
                 {
-                    string[] coord = s.Split(new char[] { '(', ',', ')', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    int goalX = int.Parse(coord[0]);
-                    int goalY = int.Parse(coord[1]);
-                    goals.Add(new Cell(goalX, goalY));
-                }
+                    // Environment Size [N,M] | [Y,X]
+                    string[] envSize = sr.ReadLine().Split(new char[] { '[', ',', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    N = int.Parse(envSize[0]);
+                    M = int.Parse(envSize[1]);
+                    cells = new Cell[M, N]; // ORDER SHOULD UPHOLD X,Y ACCESS
 
-                // Wall Coordinates (x,y,width,depth)
-                while (!sr.EndOfStream)
-                {
-                    string[] wallString = sr.ReadLine().Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-                    int inX = int.Parse(wallString[0]);
-                    int inY = int.Parse(wallString[1]);
+                    // Agent State Coordinate (x,y)
+                    string[] startCoord = sr.ReadLine().Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                    StartX = int.Parse(startCoord[0]);
+                    StartY = int.Parse(startCoord[1]);
 
-                    for (int xi = 0; xi < int.Parse(wallString[2]); xi++) 
+                    // Goal State Coordinates (x,y) | (x,y)
+                    string[] goalStates = sr.ReadLine().Split('|');
+                    foreach (string s in goalStates)
                     {
-                        for (int yi = 0; yi < int.Parse(wallString[3]); yi++)
+                        string[] coord = s.Split(new char[] { '(', ',', ')', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        int goalX = int.Parse(coord[0]);
+                        int goalY = int.Parse(coord[1]);
+                        goals.Add(new Cell(goalX, goalY));
+                    }
+
+                    // Wall Coordinates (x,y,width,depth)
+                    while (!sr.EndOfStream)
+                    {
+                        string[] wallString = sr.ReadLine().Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                        int inX = int.Parse(wallString[0]);
+                        int inY = int.Parse(wallString[1]);
+
+                        for (int xi = 0; xi < int.Parse(wallString[2]); xi++)
                         {
-                            walls.Add(new Cell(inX + xi, inY + yi, true));
+                            for (int yi = 0; yi < int.Parse(wallString[3]); yi++)
+                            {
+                                walls.Add(new Cell(inX + xi, inY + yi, true));
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("File processing failed with the following error: " + ex.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public List<Cell> AvailableMoves(int x, int y)
+        {
+            List<Cell> result = new List<Cell>();
+            // Check moving in each direction won't exceed boundaries or move into wall. ORDER: UP, LEFT, DOWN, RIGHT
+            // Up
+            if (y > 0)
+            {
+                if (!cells[x, y - 1].IsWall) { result.Add(cells[x, y - 1]); }
+            }
+            // Left
+            if (x > 0)
+            {
+                if (!cells[x - 1, y].IsWall) { result.Add(cells[x - 1, y]); }
+            }
+            // Down
+            if (y < N - 1)
+            {
+                if (!cells[x, y + 1].IsWall) { result.Add(cells[x, y + 1]); }
+            }
+            // Right
+            if (x < M - 1)
+            {
+                if (!cells[x + 1, y].IsWall) { result.Add(cells[x + 1, y]); }
+            }
+            return result;
+        }
+
+        public bool AtGoalState(int x, int y)
+        {
+            foreach (Cell c in goals)
+            {
+                if (x == c.X && y == c.Y) return true;
+            }
+            return false;
         }
     }
 }

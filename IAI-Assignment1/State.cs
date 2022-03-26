@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace IAI_Assignment1
 {
-    internal class State
+    public class State
     {
-        Cell cell;
-        State parent;
-        int currentCost;
+        public State(Cell cell, State? parent, int currentCost)
+        {
+            Cell = cell;
+            Parent = parent;
+            CurrentCost = currentCost;
+        }
+
+        public Cell Cell { get; }
+        public State Parent { get; }
+        public int CurrentCost { get; }
     }
 }
