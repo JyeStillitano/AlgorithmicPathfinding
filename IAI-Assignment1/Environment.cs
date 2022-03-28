@@ -42,7 +42,8 @@ namespace IAI_Assignment1
 
         // List of cells as a 2D array
         public Cell[,] cells;
-        List<Cell> goals = new List<Cell>();
+        public List<Cell> goals = new List<Cell>();
+        public Cell currentGoal;
         private List<Cell> walls = new List<Cell>();
 
         // Frontier
@@ -174,10 +175,7 @@ namespace IAI_Assignment1
 
         public bool AtGoalState(int x, int y)
         {
-            foreach (Cell c in goals)
-            {
-                if (x == c.X && y == c.Y) return true;
-            }
+            if (x == currentGoal.X && y == currentGoal.Y) return true;
             return false;
         }
     }
