@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace IAI_Assignment1
@@ -17,34 +18,45 @@ namespace IAI_Assignment1
     /// <summary>
     /// Interaction logic for Search.xaml
     /// </summary>
-    public partial class Search : Window
+    public partial class Search : Page
     {
         public Search(SearchAlgorithmTypes type)
         {
             InitializeComponent();
 
-            switch (type) 
+            switch (type)
             {
                 case SearchAlgorithmTypes.DFS:
-                    
+                    DFS();
                     break;
                 case SearchAlgorithmTypes.BFS:
                     BFS();
                     break;
                 case SearchAlgorithmTypes.Greedy:
-                    
+
                     break;
                 case SearchAlgorithmTypes.AStar:
-                    
+
                     break;
             }
+        }
+        private void DFS()
+        {
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
 
-            
+            foreach (Cell goal in env.goals)
+            {
+                env.currentGoal = goal;
+                SearchAlgorithms search = new SearchAlgorithms();
+
+                search.DepthFirstSearch(env);
+                search.DebugResults();
+            }
         }
 
         private void BFS()
         {
-            Environment env = new Environment("C:/Users/jstillitano/Desktop/IAI-Assignment1/TestEnvironment.txt");
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
 
             foreach (Cell goal in env.goals)
             {
@@ -55,5 +67,7 @@ namespace IAI_Assignment1
                 search.DebugResults();
             }
         }
+
+
     }
 }

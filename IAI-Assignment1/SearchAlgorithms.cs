@@ -51,16 +51,53 @@ namespace IAI_Assignment1
         // Uninformed Search Algorithms ------------------------------------------------------------
 
         /// <summary>
-        /// 
+        /// Attempts to locate the given environments current goal state using a depth-first search algorithm.
         /// </summary>
-        /// <param name="env"></param>
+        /// <param name="env">The environment to be traversed.</param>
         public void DepthFirstSearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 1);
             visitedStates.Add(env.StartState);
 
+            State state = frontier.Dequeue();
 
+            DFSRecursive(env, state);
         }
+
+        /// <summary>
+        /// Internal recursive function for completing a Depth First Search.
+        /// </summary>
+        /// <param name="env">The environment to be traversed.</param>
+        /// <param name="state">The current state.</param>
+        /// <returns></returns>
+        public bool DFSRecursive(Environment env, State state)
+        {
+            bool complete = false;
+            if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
+            {
+                foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
+                {
+                    State childState = new State(childCell, state, state.CurrentCost + 1);
+                    if (!StateVisited(childState))
+                    {
+                        visitedStates.Add(childState);
+                        if (DFSRecursive(env, childState)) return true;
+                    }
+                }
+            }
+            else
+            {
+                while (state.Parent != null)
+                {
+                    results.Push(state);
+                    state = state.Parent;
+                }
+                results.Push(state);
+                return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Attempts to locate the given environments current goal state using a breadth-first search algorithm.

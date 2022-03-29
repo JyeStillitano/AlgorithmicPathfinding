@@ -16,14 +16,26 @@ using System.Windows.Shapes;
 namespace IAI_Assignment1
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Home.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Home : Page
     {
-        public MainWindow()
+        Frame Main;
+        public Home(Frame main)
         {
+            Main = main;
             InitializeComponent();
-            Main.Content = new Home(Main);
+
+        }
+
+        private void DFSButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            Main.Content = new Search(SearchAlgorithmTypes.DFS);
+        }
+
+        private void BFSButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            Main.Content = new Search(SearchAlgorithmTypes.BFS);
         }
     }
 }
