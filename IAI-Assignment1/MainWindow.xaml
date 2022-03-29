@@ -35,8 +35,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Depth-First Search" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Cambria" BorderBrush="#FF668BFD" Foreground="White" Background="#FF574EC5" />
-                    <Button Content="Breadth-First Search" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Cambria" BorderBrush="#FF668BFD" Background="#FF574EC5" Foreground="White" />
+                    <Button Content="Depth-First Search" Name="DFSButton" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Cambria" BorderBrush="#FF668BFD" Foreground="White" Background="#FF574EC5" />
+                    <Button Content="Breadth-First Search" Name="BFSButton" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Cambria" BorderBrush="#FF668BFD" Background="#FF574EC5" Foreground="White" Cursor="" Click="BFSButtonOnClick" />
                 </Grid>
             </Grid>
             <Grid Grid.Column="2">

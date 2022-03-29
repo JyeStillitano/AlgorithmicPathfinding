@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
 namespace IAI_Assignment1
 {
+    public enum SearchAlgorithmTypes
+    {
+        BFS,
+        DFS,
+        Greedy,
+        AStar
+    }
+
     public class SearchAlgorithms
     {
         List<State> visitedStates = new List<State>();
@@ -17,7 +22,7 @@ namespace IAI_Assignment1
         {
             if (results.Count > 0)
             {
-                Debug.WriteLine("Search success! Goal state found through.");
+                Debug.WriteLine("Search success! Goal state found through...");
                 while (results.Count > 0)
                 {
                     State state = results.Pop();
@@ -28,6 +33,12 @@ namespace IAI_Assignment1
                 Debug.WriteLine("Search failure. No results found.");
             }
         }
+
+        /// <summary>
+        /// Check if the given state has been explored throughout the run.
+        /// </summary>
+        /// <param name="state">The state to check.</param>
+        /// <returns>If the given state has been explored, returns true. Else, false.</returns>
         public bool StateVisited(State state)
         {
             foreach (State visited in visitedStates)
@@ -37,7 +48,12 @@ namespace IAI_Assignment1
             return false;
         }
 
-        // Uninformed Search Algorithms
+        // Uninformed Search Algorithms ------------------------------------------------------------
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
         public void DepthFirstSearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 1);
@@ -46,6 +62,10 @@ namespace IAI_Assignment1
 
         }
 
+        /// <summary>
+        /// Attempts to locate the given environments current goal state using a breadth-first search algorithm.
+        /// </summary>
+        /// <param name="env">The environment to be traversed.</param>
         public void BreadthFirstSearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 1);
@@ -80,7 +100,12 @@ namespace IAI_Assignment1
             }
         }
 
-        // Informed Search Algorithms - Best First Search
+        // Informed Search Algorithms - Best First Search ---------------------------------------------
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
         public void GreedySearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 0);
@@ -113,6 +138,10 @@ namespace IAI_Assignment1
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="env"></param>
         public void AStarSearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 0);
@@ -142,6 +171,6 @@ namespace IAI_Assignment1
             }
         }
 
-        // Two Custom Search Strategies (one informed, one uninformed)
+        // Two Custom Search Strategies (one informed, one uninformed) --------------------------------------
     }
 }

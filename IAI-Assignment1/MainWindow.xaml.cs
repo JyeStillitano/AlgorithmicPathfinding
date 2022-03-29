@@ -23,18 +23,12 @@ namespace IAI_Assignment1
         public MainWindow()
         {
             InitializeComponent();
-            
+        }
 
-            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
-
-            foreach (Cell goal in env.goals)
-            {
-                env.currentGoal = goal;
-                SearchAlgorithms search = new SearchAlgorithms();
-
-                search.BreadthFirstSearch(env);
-                search.DebugResults();
-            }
+        private void BFSButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            Search searchWindow = new Search(SearchAlgorithmTypes.BFS);
+            searchWindow.Show();
         }
     }
 }
