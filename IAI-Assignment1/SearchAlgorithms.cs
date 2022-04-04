@@ -4,14 +4,6 @@ using System.Diagnostics;
 
 namespace IAI_Assignment1
 {
-    public enum SearchAlgorithmTypes
-    {
-        BFS,
-        DFS,
-        Greedy,
-        AStar
-    }
-
     public class SearchAlgorithms
     {
         List<State> visitedStates = new List<State>();

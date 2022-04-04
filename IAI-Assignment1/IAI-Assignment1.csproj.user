@@ -10,7 +10,7 @@
     <Compile Update="Home.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Search.xaml.cs">
+    <Compile Update="Results.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -21,7 +21,7 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Search.xaml">
+    <Page Update="Results.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

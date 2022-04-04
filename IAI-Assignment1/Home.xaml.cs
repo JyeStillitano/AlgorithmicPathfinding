@@ -30,12 +30,32 @@ namespace IAI_Assignment1
 
         private void DFSButtonOnClick(object sender, RoutedEventArgs e)
         {
-            Main.Content = new Search(SearchAlgorithmTypes.DFS);
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
+
+            foreach (Cell goal in env.goals)
+            {
+                env.currentGoal = goal;
+                SearchAlgorithms search = new SearchAlgorithms();
+
+                search.DepthFirstSearch(env);
+                search.DebugResults();
+            }
+            Main.Content = new Results(env);
         }
 
         private void BFSButtonOnClick(object sender, RoutedEventArgs e)
         {
-            Main.Content = new Search(SearchAlgorithmTypes.BFS);
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
+
+            foreach (Cell goal in env.goals)
+            {
+                env.currentGoal = goal;
+                SearchAlgorithms search = new SearchAlgorithms();
+
+                search.BreadthFirstSearch(env);
+                search.DebugResults();
+            }
+            Main.Content = new Results(env);
         }
     }
 }
