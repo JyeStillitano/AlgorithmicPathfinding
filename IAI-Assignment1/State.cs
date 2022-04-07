@@ -17,6 +17,6 @@ namespace IAI_Assignment1
 
         public Cell Cell { get; }
         public State Parent { get; }
-        public int CurrentCost { get; }
+        public int CurrentCost { get; set; }
     }
 }

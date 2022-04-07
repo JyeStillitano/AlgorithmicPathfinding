@@ -173,6 +173,11 @@ namespace IAI_Assignment1
             return result;
         }
 
+        public int GetManhattanDistance(Cell c)
+        {
+            return Math.Abs(c.X - currentGoal.X) + Math.Abs(c.Y - currentGoal.Y);
+        }
+
         public bool AtGoalState(int x, int y)
         {
             if (x == currentGoal.X && y == currentGoal.Y) return true;

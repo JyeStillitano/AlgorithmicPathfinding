@@ -64,7 +64,6 @@ namespace IAI_Assignment1
         /// <returns></returns>
         public bool DFSRecursive(Environment env, State state)
         {
-            bool complete = false;
             if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
             {
                 foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
@@ -130,71 +129,75 @@ namespace IAI_Assignment1
         }
 
         // Informed Search Algorithms - Best First Search ---------------------------------------------
-
         /// <summary>
-        /// 
+        /// Attempts to locate the given environments current goal state using a greedy best-first search algorithm.
         /// </summary>
-        /// <param name="env"></param>
+        /// <param name="env">The environment to be traversed.</param>
         public void GreedySearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 0);
-            visitedStates.Add(env.StartState);
 
             while (frontier.Count > 0)
             {
-                State state = frontier.Dequeue();
+                State parentState = frontier.Dequeue();
+                visitedStates.Add(parentState);
 
-                if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
+                if (!env.AtGoalState(parentState.Cell.X, parentState.Cell.Y))
                 {
-                    foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
+                    foreach (Cell childCell in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
                     {
-                        // TODO CHANGE COST AND PRIORITY
-                        State childState = new State(childCell, state, state.CurrentCost + 1);
-                        //int SLD = env.GetSLD(r.Destination, destination);
-                        //priorityFrontier.Enqueue(childState, SLD);
+                        State childState = new State(childCell, parentState, env.GetManhattanDistance(childCell));
+                        if (!StateVisited(childState))
+                        {
+                            frontier.Enqueue(childState, childState.CurrentCost);
+                        }
                     }
                 }
                 else
                 {
-                    while (state.Parent != null)
+                    while (parentState.Parent != null)
                     {
-                        results.Push(state);
-                        state = state.Parent;
+                        results.Push(parentState);
+                        parentState = parentState.Parent;
                     }
-                    results.Push(state);
+                    results.Push(parentState);
                     return;
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Attempts to locate the given environments current goal state using an A* search algorithm.
         /// </summary>
-        /// <param name="env"></param>
+        /// <param name="env">The environment to be traversed.</param>
         public void AStarSearch(Environment env)
         {
             frontier.Enqueue(env.StartState, 0);
-            visitedStates.Add(env.StartState);
 
             while (frontier.Count > 0)
             {
-                State state = frontier.Dequeue();
+                State parentState = frontier.Dequeue();
+                visitedStates.Add(parentState);
 
-                if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
+                if (!env.AtGoalState(parentState.Cell.X, parentState.Cell.Y))
                 {
-                    foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
+                    foreach (Cell childCell in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
                     {
-                        // TODO: Queueing
+                        State childState = new State(childCell, parentState, parentState.CurrentCost + 1);
+                        if (!StateVisited(childState))
+                        {
+                            frontier.Enqueue(childState, childState.CurrentCost = env.GetManhattanDistance(childCell));
+                        }
                     }
                 }
                 else
                 {
-                    while (state.Parent != null)
+                    while (parentState.Parent != null)
                     {
-                        results.Push(state);
-                        state = state.Parent;
+                        results.Push(parentState);
+                        parentState = parentState.Parent;
                     }
-                    results.Push(state);
+                    results.Push(parentState);
                     return;
                 }
             }

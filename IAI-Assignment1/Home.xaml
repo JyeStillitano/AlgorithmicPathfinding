@@ -57,7 +57,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Content="Greedy Search" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Roboto" BorderBrush="#FF668BFD" Background="#FF584CA9" Foreground="White" />
+                        <Button Content="Greedy Search" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Roboto" BorderBrush="#FF668BFD" Background="#FF584CA9" Foreground="White" Click="GreedyButtonOnClick" />
                         <Button Content="A* Search" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" Height="40" FontFamily="Roboto" BorderBrush="#FF668BFD" Background="#FF584CA9" Foreground="White" />
                     </Grid>
                 </Grid>
