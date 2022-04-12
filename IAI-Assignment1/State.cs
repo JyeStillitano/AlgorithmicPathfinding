@@ -8,7 +8,7 @@ namespace IAI_Assignment1
 {
     public class State
     {
-        public State(Cell cell, State? parent, int currentCost)
+        public State(Cell cell, State? parent, double currentCost)
         {
             Cell = cell;
             Parent = parent;
@@ -17,6 +17,6 @@ namespace IAI_Assignment1
 
         public Cell Cell { get; }
         public State Parent { get; }
-        public int CurrentCost { get; set; }
+        public double CurrentCost { get; set; }
     }
 }

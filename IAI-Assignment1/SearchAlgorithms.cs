@@ -7,7 +7,7 @@ namespace IAI_Assignment1
     public class SearchAlgorithms
     {
         List<State> visitedStates = new List<State>();
-        PriorityQueue<State, int> frontier = new PriorityQueue<State, int>();
+        PriorityQueue<State, double> frontier = new PriorityQueue<State, double>();
         Stack<State> results = new Stack<State>();
 
         public void DebugResults()
@@ -66,8 +66,9 @@ namespace IAI_Assignment1
         {
             if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
             {
-                foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
+                foreach (MoveDirection direction in env.AvailableMoves(state.Cell.X, state.Cell.Y))
                 {
+                    Cell childCell = env.GetCellInDirection(state.Cell.X, state.Cell.Y, direction);
                     State childState = new State(childCell, state, state.CurrentCost + 1);
                     if (!StateVisited(childState))
                     {
@@ -105,8 +106,9 @@ namespace IAI_Assignment1
 
                 if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
                 {
-                    foreach (Cell childCell in env.AvailableMoves(state.Cell.X, state.Cell.Y))
+                    foreach (MoveDirection direction in env.AvailableMoves(state.Cell.X, state.Cell.Y))
                     {
+                        Cell childCell = env.GetCellInDirection(state.Cell.X, state.Cell.Y, direction);
                         State childState = new State(childCell, state, state.CurrentCost + 1);
                         if (!StateVisited(childState))
                         {
@@ -144,9 +146,27 @@ namespace IAI_Assignment1
 
                 if (!env.AtGoalState(parentState.Cell.X, parentState.Cell.Y))
                 {
-                    foreach (Cell childCell in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
+                    foreach (MoveDirection direction in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
                     {
-                        State childState = new State(childCell, parentState, env.GetManhattanDistance(childCell));
+                        double directionPriority = 0.0;
+                        switch (direction)
+                        {
+                            case MoveDirection.Up:
+                                directionPriority = 0.1;
+                                break;
+                            case MoveDirection.Left:
+                                directionPriority = 0.2;
+                                break;
+                            case MoveDirection.Down:
+                                directionPriority = 0.3;
+                                break;
+                            case MoveDirection.Right:
+                                directionPriority = 0.4;
+                                break;
+                        }
+
+                        Cell childCell = env.GetCellInDirection(parentState.Cell.X, parentState.Cell.Y, direction);
+                        State childState = new State(childCell, parentState, env.GetManhattanDistance(childCell.X, childCell.Y) + directionPriority);
                         if (!StateVisited(childState))
                         {
                             frontier.Enqueue(childState, childState.CurrentCost);
@@ -181,12 +201,30 @@ namespace IAI_Assignment1
 
                 if (!env.AtGoalState(parentState.Cell.X, parentState.Cell.Y))
                 {
-                    foreach (Cell childCell in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
+                    foreach (MoveDirection direction in env.AvailableMoves(parentState.Cell.X, parentState.Cell.Y))
                     {
+                        double directionPriority = 0.0;
+                        switch (direction)
+                        {
+                            case MoveDirection.Up:
+                                directionPriority = 0.1;
+                                break;
+                            case MoveDirection.Left:
+                                directionPriority = 0.2;
+                                break;
+                            case MoveDirection.Down:
+                                directionPriority = 0.3;
+                                break;
+                            case MoveDirection.Right:
+                                directionPriority = 0.4;
+                                break;
+                        }
+
+                        Cell childCell = env.GetCellInDirection(parentState.Cell.X, parentState.Cell.Y, direction);
                         State childState = new State(childCell, parentState, parentState.CurrentCost + 1);
                         if (!StateVisited(childState))
                         {
-                            frontier.Enqueue(childState, childState.CurrentCost = env.GetManhattanDistance(childCell));
+                            frontier.Enqueue(childState, childState.CurrentCost + env.GetManhattanDistance(childCell.X, childCell.Y) + directionPriority);
                         }
                     }
                 }
@@ -204,5 +242,6 @@ namespace IAI_Assignment1
         }
 
         // Two Custom Search Strategies (one informed, one uninformed) --------------------------------------
+
     }
 }

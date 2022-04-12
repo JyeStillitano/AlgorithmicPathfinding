@@ -17,7 +17,7 @@
         <Label 
         Content="Algorithmic Pathfinding" 
         Grid.Row="0" 
-        HorizontalAlignment="Left" 
+        HorizontalAlignment="Center" 
         VerticalAlignment="Center" 
         Padding="20,0,0,0"
         FontSize="24" 

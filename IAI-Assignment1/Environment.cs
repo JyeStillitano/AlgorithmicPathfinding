@@ -5,6 +5,14 @@ using System.Diagnostics;
 
 namespace IAI_Assignment1
 {
+    public enum MoveDirection
+    {
+        Up,
+        Left,
+        Down,
+        Right
+    }
+
     public class Cell
     {
         // A Cell will have
@@ -41,14 +49,10 @@ namespace IAI_Assignment1
         int M;
 
         // List of cells as a 2D array
-        public Cell[,] cells;
+        Cell[,] cells;
         public List<Cell> goals = new List<Cell>();
         public Cell currentGoal;
         private List<Cell> walls = new List<Cell>();
-
-        // Frontier
-        Queue<State> frontier = new Queue<State>();
-        List<State> visitedStates = new List<State> ();
 
         // Start
         int StartX;
@@ -63,36 +67,17 @@ namespace IAI_Assignment1
                 SetupWalls();
 
                 StartState = new State(cells[StartX, StartY], null, 0);
-                frontier.Enqueue(StartState);
-                visitedStates.Add(StartState);
             }
         }
 
-        // Initialise all cells in 2D array.
-        private void SetupCells()
-        {
-            // M      N
-            // 0: 11, 1: 5
-            for (int i = 0; i < cells.GetLength(0); i++) 
-            {
-                for (int j = 0; j < cells.GetLength(1); j++)
-                {
-                    cells[i, j] = new Cell(i, j);
-                }
-            }
-        }
-        
-        // Setup appropriate cells as walls.
-        private void SetupWalls()
-        {
-            foreach (Cell cell in walls) 
-            {
-                cells[cell.X, cell.Y].IsWall = true;
-            }
-        }
+        // SETUP ----------------------------------------------------------------------------
 
-        // Process input environment file.
-        private bool ProcessInput(string filepath) 
+        /// <summary>
+        /// Processes the environment information provided.
+        /// </summary>
+        /// <param name="filepath">The location of the environment setup text file.</param>
+        /// <returns>Whether the processing was successful.</returns>
+        private bool ProcessInput(string filepath)
         {
             // Setup stream reader.
             StreamReader sr = new StreamReader(filepath);
@@ -146,38 +131,117 @@ namespace IAI_Assignment1
             return true;
         }
 
-        public List<Cell> AvailableMoves(int x, int y)
+        /// <summary>
+        /// Initialise all cells in a 2D array.
+        /// </summary>
+        private void SetupCells()
         {
-            List<Cell> result = new List<Cell>();
+            // M      N
+            // 0: 11, 1: 5
+            for (int i = 0; i < cells.GetLength(0); i++) 
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    cells[i, j] = new Cell(i, j);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Internal wall setup function.
+        /// </summary>
+        private void SetupWalls()
+        {
+            foreach (Cell cell in walls) 
+            {
+                cells[cell.X, cell.Y].IsWall = true;
+            }
+        }
+
+        // GENERAL FUNCTIONS ----------------------------------------------------------------
+        
+        /// <summary>
+        /// Retrieve the cell at a given coordinate.
+        /// </summary>
+        /// <param name="x">X Coordinate</param>
+        /// <param name="y">Y Coordinate</param>
+        /// <returns>Cell at given coordinate.</returns>
+        public Cell GetCell(int x, int y) { return cells[x, y]; }
+
+        /// <summary>
+        /// Retrieve the cell one move in the given direction from the given location.
+        /// </summary>
+        /// <param name="X">X Coordinate</param>
+        /// <param name="Y">Y Coordinate</param>
+        /// <param name="dir">The MoveDirection of the cell.</param>
+        /// <returns>Cell at location after move.</returns>
+        public Cell GetCellInDirection(int X, int Y, MoveDirection dir)
+        {
+            switch (dir)
+            {
+                case MoveDirection.Up:
+                    return GetCell(X, Y - 1);
+                case MoveDirection.Left:
+                    return GetCell(X - 1, Y);
+                case MoveDirection.Down:
+                    return GetCell(X, Y + 1);
+                case MoveDirection.Right:
+                    return GetCell(X + 1, Y);
+                default:
+                    return GetCell(X, Y);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all legal moves from a given location.
+        /// </summary>
+        /// <param name="x">X Coordinate</param>
+        /// <param name="y">Y Coordinate</param>
+        /// <returns>Returns a list of legal MoveDirections.</returns>
+        public List<MoveDirection> AvailableMoves(int x, int y)
+        {
+            List<MoveDirection> result = new List<MoveDirection>();
             // Check moving in each direction won't exceed boundaries or move into wall. ORDER: UP, LEFT, DOWN, RIGHT
             // Up
             if (y > 0)
             {
-                if (!cells[x, y - 1].IsWall) { result.Add(cells[x, y - 1]); }
+                if (!cells[x, y - 1].IsWall) { result.Add(MoveDirection.Up); }
             }
             // Left
             if (x > 0)
             {
-                if (!cells[x - 1, y].IsWall) { result.Add(cells[x - 1, y]); }
+                if (!cells[x - 1, y].IsWall) { result.Add(MoveDirection.Left); }
             }
             // Down
             if (y < N - 1)
             {
-                if (!cells[x, y + 1].IsWall) { result.Add(cells[x, y + 1]); }
+                if (!cells[x, y + 1].IsWall) { result.Add(MoveDirection.Down); }
             }
             // Right
             if (x < M - 1)
             {
-                if (!cells[x + 1, y].IsWall) { result.Add(cells[x + 1, y]); }
+                if (!cells[x + 1, y].IsWall) { result.Add(MoveDirection.Right); }
             }
             return result;
         }
 
-        public int GetManhattanDistance(Cell c)
+        /// <summary>
+        /// Retrieves the manhattan distance from the given cell to the current goal cell, ignoring walls. 
+        /// </summary>
+        /// <param name="x">X Coordinate</param>
+        /// <param name="y">Y Coordinate</param>
+        /// <returns>Returns the manhattan distance to the current goal ignoring walls.</returns>
+        public int GetManhattanDistance(int x, int y)
         {
-            return Math.Abs(c.X - currentGoal.X) + Math.Abs(c.Y - currentGoal.Y);
+            return Math.Abs(x - currentGoal.X) + Math.Abs(y - currentGoal.Y);
         }
 
+        /// <summary>
+        /// Determines whether the given coordinate is at the goal state.
+        /// </summary>
+        /// <param name="x">X Coordinate</param>
+        /// <param name="y">Y Coordinate</param>
+        /// <returns>If at the goal state returns true, else false.</returns>
         public bool AtGoalState(int x, int y)
         {
             if (x == currentGoal.X && y == currentGoal.Y) return true;

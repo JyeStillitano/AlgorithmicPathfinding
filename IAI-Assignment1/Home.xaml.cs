@@ -60,5 +60,20 @@ namespace IAI_Assignment1
             }
             Main.Content = new Results(env);
         }
+
+        private void AStarButtonOnClick(object sender, RoutedEventArgs e)
+        {
+            Environment env = new Environment("C:/Users/jyest/Desktop/IAI - Assignment1/IAI-Assignment1/TestEnvironment.txt");
+
+            foreach (Cell goal in env.goals)
+            {
+                env.currentGoal = goal;
+                SearchAlgorithms search = new SearchAlgorithms();
+
+                search.AStarSearch(env);
+                search.DebugResults();
+            }
+            Main.Content = new Results(env);
+        }
     }
 }
