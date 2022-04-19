@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IAI-Assignment1", "IAI-Assignment1.csproj", "{6BE95CFE-8AF6-409D-87F1-54A5D7AA0864}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmicPathfinding", "AlgorithmicPathfinding.csproj", "{AC999C77-1149-4E21-98AE-20919D439D52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6BE95CFE-8AF6-409D-87F1-54A5D7AA0864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BE95CFE-8AF6-409D-87F1-54A5D7AA0864}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BE95CFE-8AF6-409D-87F1-54A5D7AA0864}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BE95CFE-8AF6-409D-87F1-54A5D7AA0864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC999C77-1149-4E21-98AE-20919D439D52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC999C77-1149-4E21-98AE-20919D439D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC999C77-1149-4E21-98AE-20919D439D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC999C77-1149-4E21-98AE-20919D439D52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8AD3CD1D-0638-4D26-A21A-9E28838BAAC4}
+		SolutionGuid = {A906B874-7A8C-441A-8B7A-318624A5FE82}
 	EndGlobalSection
 EndGlobal

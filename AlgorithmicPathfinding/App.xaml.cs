@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace IAI_Assignment1
+namespace AlgorithmicPathfinding
 {
     /// <summary>
     /// Interaction logic for App.xaml

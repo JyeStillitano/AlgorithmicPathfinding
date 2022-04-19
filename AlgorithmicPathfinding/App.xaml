@@ -1,7 +1,7 @@
-﻿<Application x:Class="IAI_Assignment1.App"
+﻿<Application x:Class="AlgorithmicPathfinding.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:IAI_Assignment1"
+             xmlns:local="clr-namespace:AlgorithmicPathfinding"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

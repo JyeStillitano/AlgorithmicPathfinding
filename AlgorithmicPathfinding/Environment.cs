@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-namespace IAI_Assignment1
+namespace AlgorithmicPathfinding
 {
     public enum MoveDirection
     {
@@ -29,29 +29,17 @@ namespace IAI_Assignment1
         public int Y { get; }
         public bool IsWall { get; set; }
     }
-    
+
     public class Environment
     {
-        //  Example
-
-        //    01234567890  X/M
-        //    ------------
-        //  0|  XX   GX X|
-        //  1|R XX    X  |
-        //  2|           |
-        //  3|  X      XG|
-        //  4|  XXXX  XX |
-        // Y/N------------
-
-
         // Size, N * M | ROWS * COLUMNS
         int N;
         int M;
 
         // List of cells as a 2D array
-        Cell[,] cells;
-        public List<Cell> goals = new List<Cell>();
-        public Cell currentGoal;
+        Cell[,] cells = new Cell[0,0];
+        private List<Cell> goals = new List<Cell>();
+        public Cell CurrentGoal { get; set; }
         private List<Cell> walls = new List<Cell>();
 
         // Start
@@ -138,7 +126,7 @@ namespace IAI_Assignment1
         {
             // M      N
             // 0: 11, 1: 5
-            for (int i = 0; i < cells.GetLength(0); i++) 
+            for (int i = 0; i < cells.GetLength(0); i++)
             {
                 for (int j = 0; j < cells.GetLength(1); j++)
                 {
@@ -146,20 +134,20 @@ namespace IAI_Assignment1
                 }
             }
         }
-        
+
         /// <summary>
         /// Internal wall setup function.
         /// </summary>
         private void SetupWalls()
         {
-            foreach (Cell cell in walls) 
+            foreach (Cell cell in walls)
             {
                 cells[cell.X, cell.Y].IsWall = true;
             }
         }
 
         // GENERAL FUNCTIONS ----------------------------------------------------------------
-        
+
         /// <summary>
         /// Retrieve the cell at a given coordinate.
         /// </summary>
@@ -169,7 +157,25 @@ namespace IAI_Assignment1
         public Cell GetCell(int x, int y) { return cells[x, y]; }
 
         /// <summary>
-        /// Retrieve the cell one move in the given direction from the given location.
+        /// Retrieve 2D cell array.
+        /// </summary>
+        /// <returns>Returns cells 2D Array.</returns>
+        public Cell[,] GetAllCells() { return cells; }
+
+        /// <summary>
+        /// Retrieve all wall cells.
+        /// </summary>
+        /// <returns>Returns the walls as a list of cells.</returns>
+        public List<Cell> GetWalls() { return walls; }
+
+        /// <summary>
+        /// Retrieve all goal cells.
+        /// </summary>
+        /// <returns>Goal state cells.</returns>
+        public List<Cell> GetGoals() { return goals; }
+
+        /// <summary>
+        /// Retrieve the cell one move in a given direction from the given location.
         /// </summary>
         /// <param name="X">X Coordinate</param>
         /// <param name="Y">Y Coordinate</param>
@@ -233,7 +239,7 @@ namespace IAI_Assignment1
         /// <returns>Returns the manhattan distance to the current goal ignoring walls.</returns>
         public int GetManhattanDistance(int x, int y)
         {
-            return Math.Abs(x - currentGoal.X) + Math.Abs(y - currentGoal.Y);
+            return Math.Abs(x - CurrentGoal.X) + Math.Abs(y - CurrentGoal.Y);
         }
 
         /// <summary>
@@ -244,7 +250,19 @@ namespace IAI_Assignment1
         /// <returns>If at the goal state returns true, else false.</returns>
         public bool AtGoalState(int x, int y)
         {
-            if (x == currentGoal.X && y == currentGoal.Y) return true;
+            if (x == CurrentGoal.X && y == CurrentGoal.Y) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether the given coordinate is at the start state.
+        /// </summary>
+        /// <param name="x">X Coordinate</param>
+        /// <param name="y">Y Coordinate</param>
+        /// <returns>If at the start state returns true, else false.</returns>
+        public bool AtStartState(int x, int y)
+        {
+            if (x == StartState.Cell.X && y == StartState.Cell.Y) return true;
             return false;
         }
     }
