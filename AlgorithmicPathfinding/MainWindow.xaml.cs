@@ -26,7 +26,6 @@ namespace AlgorithmicPathfinding
         {
             // Setup Environment.
             Environment env = new Environment(args[1]);
-             new SearchAlgorithms();
             string searchMethod = args[2];
             List<Cell> goals = env.GetGoals();
 
@@ -55,7 +54,6 @@ namespace AlgorithmicPathfinding
         {
             // Setup Environment.
             Environment env = new Environment(args[1]);
-            
             string searchMethod = args[2];
             List<Cell> goals = env.GetGoals();
 
@@ -73,6 +71,7 @@ namespace AlgorithmicPathfinding
                 System.Console.WriteLine(System.Environment.GetCommandLineArgs()[1]);
                 System.Console.WriteLine(algorithm);
                 System.Console.WriteLine(solution.Count);
+                if (solution.Count == 0) { System.Console.WriteLine("No solution found."); }
                 while (solution.Count > 0)
                 {
                     State state = solution.Pop();

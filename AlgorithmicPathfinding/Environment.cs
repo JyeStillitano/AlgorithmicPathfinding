@@ -33,19 +33,20 @@ namespace AlgorithmicPathfinding
     public class Environment
     {
         // Size, N * M | ROWS * COLUMNS
-        int N;
-        int M;
+        private int N;
+        private int M;
 
         // List of cells as a 2D array
-        Cell[,] cells = new Cell[0,0];
+        private Cell[,] cells = new Cell[0,0];
+        private List<Cell> walls = new List<Cell>();
         private List<Cell> goals = new List<Cell>();
         public Cell CurrentGoal { get; set; }
-        private List<Cell> walls = new List<Cell>();
 
         // Start
-        int StartX;
-        int StartY;
+        private int StartX;
+        private int StartY;
         public State StartState { get; }
+
         public Environment(string filepath)
         {
             // If file successfully processed continue setup.
@@ -98,14 +99,17 @@ namespace AlgorithmicPathfinding
                     while (!sr.EndOfStream)
                     {
                         string[] wallString = sr.ReadLine().Split(new char[] { '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries);
-                        int inX = int.Parse(wallString[0]);
-                        int inY = int.Parse(wallString[1]);
-
-                        for (int xi = 0; xi < int.Parse(wallString[2]); xi++)
+                        if (wallString.Length > 0)
                         {
-                            for (int yi = 0; yi < int.Parse(wallString[3]); yi++)
+                            int inX = int.Parse(wallString[0]);
+                            int inY = int.Parse(wallString[1]);
+
+                            for (int xi = 0; xi < int.Parse(wallString[2]); xi++)
                             {
-                                walls.Add(new Cell(inX + xi, inY + yi, true));
+                                for (int yi = 0; yi < int.Parse(wallString[3]); yi++)
+                                {
+                                    walls.Add(new Cell(inX + xi, inY + yi, true));
+                                }
                             }
                         }
                     }

@@ -34,7 +34,7 @@ namespace AlgorithmicPathfinding
         /// </summary>
         /// <param name="state">The state to check.</param>
         /// <returns>If the given state has been explored, returns true. Else, false.</returns>
-        public bool StateVisited(State state)
+        private bool StateVisited(State state)
         {
             foreach (State visited in visitedStates)
             {
@@ -64,7 +64,7 @@ namespace AlgorithmicPathfinding
         /// <param name="env">The environment to be traversed.</param>
         /// <param name="state">The current state.</param>
         /// <returns></returns>
-        public bool DFSRecursive(Environment env, State state)
+        private bool DFSRecursive(Environment env, State state)
         {
             if (!env.AtGoalState(state.Cell.X, state.Cell.Y))
             {
@@ -365,6 +365,7 @@ namespace AlgorithmicPathfinding
                 maxWalkLength--;
             }
 
+            results.Clear();
             return false;
         }
     }
