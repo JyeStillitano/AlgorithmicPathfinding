@@ -10,7 +10,8 @@ namespace AlgorithmicPathfinding
         Up,
         Left,
         Down,
-        Right
+        Right,
+        None
     }
 
     public class Cell
@@ -40,7 +41,6 @@ namespace AlgorithmicPathfinding
         private Cell[,] cells = new Cell[0,0];
         private List<Cell> walls = new List<Cell>();
         private List<Cell> goals = new List<Cell>();
-        public Cell CurrentGoal { get; set; }
 
         // Start
         private int StartX;
@@ -55,7 +55,7 @@ namespace AlgorithmicPathfinding
                 SetupCells();
                 SetupWalls();
 
-                StartState = new State(cells[StartX, StartY], null, 0);
+                StartState = new State(cells[StartX, StartY], null, 0, MoveDirection.None);
             }
         }
 
@@ -236,25 +236,34 @@ namespace AlgorithmicPathfinding
         }
 
         /// <summary>
-        /// Retrieves the manhattan distance from the given cell to the current goal cell, ignoring walls. 
+        /// Retrieves the manhattan distance from the given cell to the nearest goal cell, ignoring walls. 
         /// </summary>
         /// <param name="x">X Coordinate</param>
         /// <param name="y">Y Coordinate</param>
-        /// <returns>Returns the manhattan distance to the current goal ignoring walls.</returns>
+        /// <returns>Returns the manhattan distance to the nearest goal ignoring walls.</returns>
         public int GetManhattanDistance(int x, int y)
         {
-            return Math.Abs(x - CurrentGoal.X) + Math.Abs(y - CurrentGoal.Y);
+            int nearestGoal = int.MaxValue;
+            foreach (Cell goal in goals)
+            {
+                int distance = Math.Abs(x - goal.X) + Math.Abs(y - goal.Y);
+                if ( distance < nearestGoal) { nearestGoal = distance; }
+            }
+            return nearestGoal;
         }
 
         /// <summary>
-        /// Determines whether the given coordinate is at the goal state.
+        /// Determines whether the given coordinate is at a goal state.
         /// </summary>
         /// <param name="x">X Coordinate</param>
         /// <param name="y">Y Coordinate</param>
-        /// <returns>If at the goal state returns true, else false.</returns>
+        /// <returns>If at a goal state returns true, else false.</returns>
         public bool AtGoalState(int x, int y)
         {
-            if (x == CurrentGoal.X && y == CurrentGoal.Y) return true;
+            foreach (Cell goal in goals)
+            {
+                if (x == goal.X && y == goal.Y) return true;
+            }
             return false;
         }
 

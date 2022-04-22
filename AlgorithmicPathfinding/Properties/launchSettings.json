@@ -2,7 +2,7 @@
   "profiles": {
     "AlgorithmicPathfinding": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\jyest\\Desktop\\IAI - Assignment1\\IAI-Assignment1\\robot-nav-map5.txt\" DFS 1"
+      "commandLineArgs": "\"C:\\Users\\Jye\\Documents\\Source\\IAI-Assignment1\\TestEnvironment.txt\" AS"
     }
   }
 }

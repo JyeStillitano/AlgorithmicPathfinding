@@ -46,7 +46,7 @@ namespace AlgorithmicPathfinding
         // Uninformed Search Algorithms ---------------------------------------------------------------------
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using a depth-first search algorithm.
+        /// Attempts to locate a goal state using a depth-first search algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         public void DepthFirstSearch(Environment env)
@@ -71,7 +71,7 @@ namespace AlgorithmicPathfinding
                 foreach (MoveDirection direction in env.AvailableMoves(state.Cell.X, state.Cell.Y))
                 {
                     Cell childCell = env.GetCellInDirection(state.Cell.X, state.Cell.Y, direction);
-                    State childState = new State(childCell, state, state.CurrentCost + 1);
+                    State childState = new State(childCell, state, state.CurrentCost + 1, direction);
                     if (!StateVisited(childState))
                     {
                         visitedStates.Add(childState);
@@ -93,7 +93,7 @@ namespace AlgorithmicPathfinding
         }
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using a breadth-first search algorithm.
+        /// Attempts to locate a goal state using a breadth-first search algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         public void BreadthFirstSearch(Environment env)
@@ -112,7 +112,7 @@ namespace AlgorithmicPathfinding
                     foreach (MoveDirection direction in env.AvailableMoves(state.Cell.X, state.Cell.Y))
                     {
                         Cell childCell = env.GetCellInDirection(state.Cell.X, state.Cell.Y, direction);
-                        State childState = new State(childCell, state, state.CurrentCost + 1);
+                        State childState = new State(childCell, state, state.CurrentCost + 1, direction);
                         if (!StateVisited(childState))
                         {
                             frontier.Enqueue(childState);
@@ -136,7 +136,7 @@ namespace AlgorithmicPathfinding
         // Informed Search Algorithms - Best First Search ---------------------------------------------------
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using a greedy best-first search algorithm.
+        /// Attempts to locate a goal state using a greedy best-first search algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         public void GreedySearch(Environment env)
@@ -172,7 +172,7 @@ namespace AlgorithmicPathfinding
                         }
 
                         Cell childCell = env.GetCellInDirection(parentState.Cell.X, parentState.Cell.Y, direction);
-                        State childState = new State(childCell, parentState, env.GetManhattanDistance(childCell.X, childCell.Y) + directionPriority);
+                        State childState = new State(childCell, parentState, env.GetManhattanDistance(childCell.X, childCell.Y) + directionPriority, direction);
                         if (!StateVisited(childState))
                         {
                             priorityFrontier.Enqueue(childState, childState.CurrentCost);
@@ -194,7 +194,7 @@ namespace AlgorithmicPathfinding
         }
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using an A* search algorithm.
+        /// Attempts to locate a goal state using an A* search algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         public void AStarSearch(Environment env)
@@ -230,7 +230,7 @@ namespace AlgorithmicPathfinding
                         }
 
                         Cell childCell = env.GetCellInDirection(parentState.Cell.X, parentState.Cell.Y, direction);
-                        State childState = new State(childCell, parentState, parentState.CurrentCost + 1);
+                        State childState = new State(childCell, parentState, parentState.CurrentCost + 1, direction);
                         if (!StateVisited(childState))
                         {
                             priorityFrontier.Enqueue(childState, childState.CurrentCost + env.GetManhattanDistance(childCell.X, childCell.Y) + directionPriority);
@@ -254,7 +254,7 @@ namespace AlgorithmicPathfinding
         // Two Custom Search Strategies (one informed, one uninformed) --------------------------------------
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using an Iterative Depth A* search algorithm.
+        /// Attempts to locate a goal state using an Iterative Depth A* search algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         public void IterativeDepthAStarSearch(Environment env)
@@ -268,7 +268,7 @@ namespace AlgorithmicPathfinding
                 success = IDAS(env, depth);
                 if (!success) visitedStates.Clear();
                 depth++;
-            } while (!success && depth < 1000000);
+            } while (!success && depth < 10000);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace AlgorithmicPathfinding
                         }
 
                         Cell childCell = env.GetCellInDirection(parentState.Cell.X, parentState.Cell.Y, direction);
-                        State childState = new State(childCell, parentState, parentState.CurrentCost + 1);
+                        State childState = new State(childCell, parentState, parentState.CurrentCost + 1, direction);
                         if (!StateVisited(childState))
                         {
                             double depthCost = childState.CurrentCost + env.GetManhattanDistance(childCell.X, childCell.Y);
@@ -335,14 +335,14 @@ namespace AlgorithmicPathfinding
         }
 
         /// <summary>
-        /// Attempts to locate the given environments current goal state using a Random Walk algorithm.
+        /// Attempts to locate a goal state using a Random Walk algorithm.
         /// </summary>
         /// <param name="env">The environment to be traversed.</param>
         /// <returns>Success or failure.</returns>
         public bool RandomWalk(Environment env)
         {
             lastAlgorithm = "Random Walk Search";
-            int maxWalkLength = 1000;
+            int maxWalkLength = 10000;
             State state = env.StartState;
             results.Push(state);
 
@@ -357,7 +357,7 @@ namespace AlgorithmicPathfinding
 
                 // Move
                 Cell childCell = env.GetCellInDirection(state.Cell.X, state.Cell.Y, move);
-                State childState = new State(childCell, state, state.CurrentCost + 1);
+                State childState = new State(childCell, state, state.CurrentCost + 1, move);
                 results.Push(childState);
                 state = childState;
 

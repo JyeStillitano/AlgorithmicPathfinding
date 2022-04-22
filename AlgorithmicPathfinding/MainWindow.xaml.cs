@@ -11,32 +11,11 @@ namespace AlgorithmicPathfinding
         public MainWindow()
         {
             InitializeComponent();
-
-            // If there's a fourth arg, perform GUI run and use fourth argument for goal state.
             string[] args = System.Environment.GetCommandLineArgs();
-            if (args.Length > 3) { GUIRun(args); }
-            else { ConsoleRun(args); }
-        }
-
-        /// <summary>
-        /// Run a single search for a given goal state and visually display the environment and solution path.
-        /// </summary>
-        /// <param name="args">Command Line Arguments</param>
-        private void GUIRun(string[] args)
-        {
+            
             // Setup Environment.
             Environment env = new Environment(args[1]);
             string searchMethod = args[2];
-            List<Cell> goals = env.GetGoals();
-
-            // Select the given goal state.
-            int currentGoal = int.Parse(args[3]) - 1;
-            if (currentGoal < 0 || currentGoal > goals.Count - 1)
-            {
-                MessageBox.Show("ERROR: Goal Command Line Argument Failure. Invalid value. Hint: Goal index is 1 based.");
-                return;
-            }
-            env.CurrentGoal = goals[currentGoal];
 
             // Run the search.
             SearchAlgorithms search = RunSearch(env, searchMethod);
@@ -44,40 +23,6 @@ namespace AlgorithmicPathfinding
             // Display the results in the GUI.
             DisplayEnvironment(env);
             DisplayResults(env, search);
-        }
-
-        /// <summary>
-        /// Search all provided goal states and output all results to the command line interface.
-        /// </summary>
-        /// <param name="args">Command Line Arguments</param>
-        private void ConsoleRun(string[] args)
-        {
-            // Setup Environment.
-            Environment env = new Environment(args[1]);
-            string searchMethod = args[2];
-            List<Cell> goals = env.GetGoals();
-
-            foreach (Cell goal in goals)
-            {
-                env.CurrentGoal = goal;
-                SearchAlgorithms search = RunSearch(env, searchMethod);
-
-                // Search Result Data
-                string algorithm = search.GetLastAlgorithm();
-                List<State> visited = search.GetVisitedStates();
-                Stack<State> solution = search.GetResults();
-
-                // Output Results to Command Line
-                System.Console.WriteLine(System.Environment.GetCommandLineArgs()[1]);
-                System.Console.WriteLine(algorithm);
-                System.Console.WriteLine(solution.Count);
-                if (solution.Count == 0) { System.Console.WriteLine("No solution found."); }
-                while (solution.Count > 0)
-                {
-                    State state = solution.Pop();
-                    System.Console.WriteLine("[" + state.Cell.X + ", " + state.Cell.Y + "]");
-                }
-            }
         }
 
         /// <summary>
@@ -162,12 +107,18 @@ namespace AlgorithmicPathfinding
         private async void DisplayResults(Environment env, SearchAlgorithms search)
         {
             // Search Result Data
+            string environmentFilepath = System.Environment.GetCommandLineArgs()[1];
             string algorithm = search.GetLastAlgorithm();
             List<State> visited = search.GetVisitedStates();
             Stack<State> solution = search.GetResults();
 
+            // Output Results to Command Line
+            System.Console.WriteLine(environmentFilepath);
+            System.Console.WriteLine(algorithm);
+            System.Console.WriteLine(solution.Count);
+
             // Fill out results information.
-            EnvironmentValue.Text = System.Environment.GetCommandLineArgs()[1];
+            EnvironmentValue.Text = environmentFilepath;
             AlgorithmValue.Content = algorithm;
             TraversedValue.Content = solution.Count;
             VisitedValue.Content = visited.Count;
@@ -187,10 +138,18 @@ namespace AlgorithmicPathfinding
                     }
                     else { AddCellToDisplay(state.Cell.X, state.Cell.Y, Brushes.Transparent, Brushes.Orange); }
                     
-                    SolutionPathValues.Content += "[" + state.Cell.X + ", " + state.Cell.Y + "]" + "\r\n";
+                    if(!(state.Direction == MoveDirection.None)) 
+                    {
+                        System.Console.WriteLine(state.Direction.ToString() + ";");
+                        SolutionPathValues.Content += state.Direction + ";\r\n"; 
+                    }
                 }
             }
-            else SolutionPathValues.Content = "Search failure. \r\nNo Solution found.";
+            else
+            {
+                System.Console.WriteLine("No solution found.");
+                SolutionPathValues.Content = "Search failure. \r\nNo Solution found.";
+            }
         }
 
         /// <summary>
